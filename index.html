@@ -226,6 +226,12 @@
 
   /* ---------- Form ---------- */
   .field{margin-bottom:16px}
+  .vault{margin:22px 0 20px;padding:18px 16px 16px;border-radius:12px;background:linear-gradient(180deg,rgba(218,167,90,.14),rgba(218,167,90,.05));border:1px solid rgba(218,167,90,.55);box-shadow:inset 0 0 0 1px rgba(218,167,90,.12), 0 8px 24px rgba(0,0,0,.35)}
+  .vault-head{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+  .vault-icon{font-size:1.7rem;line-height:1;margin-top:2px}
+  .vault h3{font-family:'Playfair Display',serif;font-weight:600;font-size:1.25rem;color:var(--gold-light);margin:0 0 4px}
+  .vault-head p{font-size:.92rem;color:var(--ivory);margin:0}
+  .vault input{border-color:rgba(218,167,90,.45)}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media (max-width:340px){.row2{grid-template-columns:1fr}}
   label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;color:var(--ivory)}
@@ -544,7 +550,14 @@
         </div>
       </div>
 
-      <div class="field">
+      <div class="vault">
+        <div class="vault-head">
+          <span class="vault-icon" aria-hidden="true">👑</span>
+          <div>
+            <h3>Feeling generous, Madam?</h3>
+            <p>Add a little something to the Madams' Vault. Totally optional — Pee Nang won't come looking for you if you don't. Probably.</p>
+          </div>
+        </div>
         <label for="donation">Madams' Vault Donation (optional)</label>
         <input type="number" id="donation" name="donation" min="0" step="10" placeholder="0">
         <div class="hint">Any amount in multiples of ₱10. Goes to the community fund for gifts and future events.</div>

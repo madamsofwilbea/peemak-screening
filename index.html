@@ -278,6 +278,7 @@
 
   .msg{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:.92rem;display:none}
   .msg.err{display:block;background:rgba(224,122,122,.12);border:1px solid var(--danger);color:#ffd9d9}
+  .msg.info{display:block;background:rgba(218,167,90,.12);border:1px solid var(--gold);color:var(--ivory)}
 
   /* ---------- Success ---------- */
   .success{display:none;text-align:center;padding:36px 20px;position:relative;overflow:hidden}
@@ -505,18 +506,10 @@
     </div>
 
     <div class="note">
-      This is a <strong>pre-registration</strong>, exclusive to Madams of WilBea members for now. Your payment reserves your slot; the cinema, exact date, and seat assignments will be announced to registered Madams first. Screening and registration will open to the public at a later time.
+      This is a <strong>pre-registration</strong>, exclusive to Madams of WilBea members for now. Your payment reserves your slot; the cinema, exact date, and seat assignments will be announced to registered Madams first. Screening and registration will open to the public at a later time. One registration per member — if you've already registered, your slot is safe.
     </div>
   </div>
 
-  <section>
-    <h2>How it works</h2>
-    <ol class="steps">
-      <li><span class="n">1</span><p>Scan the Madams' QR code for GCash, BPI, or BDO and send ₱650 (plus a Vault donation if you like).</p></li>
-      <li><span class="n">2</span><p>Fill in the form and upload a screenshot of your payment.</p></li>
-      <li><span class="n">3</span><p>You'll get a slot reservation email right away with your registration number. Once we've verified your payment, a separate confirmation email follows.</p></li>
-    </ol>
-  </section>
 
   <section id="formSection">
     <h2>Pre-register</h2>
@@ -684,7 +677,7 @@
     if(f.type.startsWith('image/')){ img.src = URL.createObjectURL(f); img.style.display='block'; } else { img.style.display='none'; }
   });
 
-  function showError(t){ msg.className='msg err'; msg.textContent=t; msg.scrollIntoView({behavior:'smooth',block:'center'}); }
+  function showError(t, kind){ msg.className='msg ' + (kind||'err'); msg.textContent=t; msg.scrollIntoView({behavior:'smooth',block:'center'}); }
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -717,7 +710,7 @@
       const out = await r.json();
       if(!out.ok && out.error === 'duplicate'){
         btn.disabled=false; btn.textContent='Secure my slot';
-        return showError('This ' + out.field + ' is already registered (' + out.ref + '). It\'s one slot per Madam — if that\'s you, check your inbox for your reservation email. If you think this is a mistake, message the admins.');
+        return showError('Your registration didn\'t go through because your ' + out.field + ' is already registered under ' + out.ref + '. Good news: your slot is already reserved, so there\'s nothing more to do — check your inbox for the reservation email. If that wasn\'t you, message the admins and we\'ll sort it out.', 'info');
       }
       if(!out.ok) throw new Error(out.error || 'Unknown error');
       document.getElementById('refNo').textContent = out.ref;

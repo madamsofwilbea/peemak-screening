@@ -555,12 +555,12 @@
     </div>
 
     <div class="note">
-      <span id="noteOpen">Registration is <strong>open to all</strong>. Choose your screening time below — seats are limited and the form closes by itself when both cinemas are full. Your payment reserves your slot. Group registration is available. If you've already registered, your slot is safe.</span><span id="noteHold" style="display:none"><strong>New registrations are on hold</strong> while registered Madams choose their screening time and seats. Public registration reopens soon — watch the group.</span> <strong>Pee Mak is rated R-13</strong>: everyone attending, including companions, must be 13 or older. IDs will be checked on screening day.
+      <span id="noteOpen" style="display:none">Registration is <strong>open to all</strong>. Choose your screening time below — seats are limited and the form closes by itself when both cinemas are full. Your payment reserves your slot. Group registration is available. If you've already registered, your slot is safe.</span><span id="noteHold"><strong>New registrations are on hold</strong> while registered Madams choose their screening time and seats. Public registration reopens soon — watch the group.</span> <strong>Pee Mak is rated R-13</strong>: everyone attending, including companions, must be 13 or older. IDs will be checked on screening day.
     </div>
   </div>
 
 
-  <section id="holdSection" style="display:none">
+  <section id="holdSection">
     <h2>Choosing screening times</h2>
     <p class="sub" id="holdMsg">Registered Madams are choosing their screening time first. New registrations reopen soon — watch the group.</p>
     <p>Already registered? <a href="?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time here →</a></p>
@@ -601,11 +601,11 @@
     <div id="cDone" style="display:none;margin-top:18px" class="bank show"><b>Done — see you at the Podium.</b><br><span id="cDoneText"></span><br><span class="hint">We've emailed this to you. Bring the email and a valid ID on the day.</span></div>
   </section>
 
-  <section id="alreadySection" style="padding:16px 20px">
+  <section id="alreadySection" style="padding:16px 20px;display:none">
     <p style="margin:0"><b>Already registered?</b> <a href="?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time &amp; seats here →</a></p>
   </section>
 
-  <section id="formSection">
+  <section id="formSection" style="display:none">
     <h2>Pre-register</h2>
     <p class="sub">All fields marked <span style="color:var(--blush)">*</span> are required.</p>
 
@@ -804,7 +804,7 @@
 
   // ---------- live seats, hold switch, choose mode ----------
   const isChoose = /[?&]choose/.test(location.search);
-  if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; }
+  if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('holdSection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; }
   let SEATS = null;
   async function loadStatus(){
     if(SCRIPT_URL.startsWith('PASTE_')) return;
@@ -812,10 +812,12 @@
       const r = await fetch(SCRIPT_URL); SEATS = await r.json();
       if(SEATS.date && !/__/.test(SEATS.date)) document.getElementById('factDate').textContent = SEATS.date;
       document.querySelectorAll('.seats').forEach(el => { const k = el.dataset.k, s = SEATS.screenings[k]; if(!s) return; el.textContent = s.status === 'full' ? 'Fully booked' : s.status === 'few' ? 'Few seats left' : ''; const lab = el.closest('.radio'); lab.classList.toggle('full', s.status === 'full'); lab.querySelector('input').disabled = s.status === 'full'; });
-      if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; return; }
-      if(SEATS.soldOut){ document.getElementById('formSection').style.display = 'none'; document.getElementById('closedSection').style.display = 'block'; }
-      else if(SEATS.hold){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('holdSection').style.display = 'block'; document.getElementById('noteOpen').style.display = 'none'; document.getElementById('noteHold').style.display = 'inline'; document.getElementById('holdMsg').textContent = SEATS.holdMessage || document.getElementById('holdMsg').textContent; }
-    }catch(e){ /* leave the form usable; the script re-checks capacity on submit */ if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; } }
+      if(isChoose) return;
+      const show = (id, on) => document.getElementById(id).style.display = on ? '' : 'none';
+      if(SEATS.soldOut){ show('formSection', false); show('alreadySection', false); show('holdSection', false); show('closedSection', true); document.getElementById('noteOpen').style.display = 'none'; document.getElementById('noteHold').style.display = 'none'; }
+      else if(SEATS.hold){ show('formSection', false); show('alreadySection', false); show('holdSection', true); document.getElementById('holdMsg').textContent = SEATS.holdMessage || document.getElementById('holdMsg').textContent; document.getElementById('noteOpen').style.display = 'none'; document.getElementById('noteHold').style.display = 'inline'; }
+      else { show('holdSection', false); show('closedSection', false); show('alreadySection', true); show('formSection', true); document.getElementById('noteOpen').style.display = 'inline'; document.getElementById('noteHold').style.display = 'none'; }
+    }catch(e){ /* can't reach the script: stay on hold, which is the safe state */ }
   }
   loadStatus(); setInterval(loadStatus, 60000);
 

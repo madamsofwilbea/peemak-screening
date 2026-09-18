@@ -254,20 +254,7 @@
   .vault-icon{font-size:1.7rem;line-height:1;margin-top:2px}
   .vault h3{font-family:'Playfair Display',serif;font-weight:600;font-size:1.25rem;color:var(--gold-light);margin:0 0 4px}
   .vault-head p{font-size:.92rem;color:var(--ivory);margin:0}
-  .vault input,.vault select{border-color:rgba(218,167,90,.45)}
-  .vault .tiers{margin:0 0 14px;padding:12px;border-radius:10px;background:rgba(7,25,15,.45);border:1px solid rgba(218,167,90,.35)}
-  .vault .tiers-kicker{font-size:.68rem;letter-spacing:3px;text-transform:uppercase;font-weight:700;color:var(--gold)}
-  .vault .tiers-period{font-size:.8rem;color:var(--ivory-dim);margin:3px 0 10px}
-  .vault .ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-  .vault .tier{border-radius:8px;padding:8px 4px 7px;text-align:center;border:1px solid rgba(247,244,236,.22)}
-  .vault .tier b{display:block;font-family:'Playfair Display',serif;font-weight:600;font-size:.92rem;color:var(--ivory)}
-  .vault .tier i{font-style:normal;font-size:.76rem;color:var(--ivory-dim)}
-  .vault .tier.t-gold{border-color:rgba(218,167,90,.6)}
-  .vault .tier.t-crown{border-color:var(--gold);background:rgba(218,167,90,.16)} .vault .tier.t-crown b{color:var(--gold-light)}
-  .vault .tiers-fine{font-size:.8rem;line-height:1.5;color:var(--ivory-dim);margin-top:10px}
-  .vault .same-note{font-size:.82rem;line-height:1.45;color:var(--gold-light);margin:8px 0 0}
-  #wallField{display:none;margin-top:14px}
-  @media (max-width:480px){ .vault .ladder{grid-template-columns:repeat(2,1fr)} }
+  .vault input{border-color:rgba(218,167,90,.45)}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media (max-width:340px){.row2{grid-template-columns:1fr}}
   label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;color:var(--ivory)}
@@ -284,6 +271,23 @@
   .radios{display:grid;gap:8px}
   .radio{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid rgba(247,244,236,.18);background:rgba(7,25,15,.55);cursor:pointer}
   .radio input{accent-color:var(--gold);width:18px;height:18px}
+  .screen-bar{margin:8px auto 4px;max-width:420px;border:2px solid var(--ivory);border-radius:3px;text-align:center;font-size:11px;letter-spacing:5px;font-weight:700;padding:7px 0}
+  .curve{max-width:420px;margin:0 auto 22px;height:16px;border-bottom:1px solid rgba(247,244,236,.18);border-radius:0 0 50% 50%/0 0 100% 100%}
+  .map{max-width:520px;margin:0 auto}
+  .srow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px}
+  .sblock{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .seat{aspect-ratio:1.15;display:flex;align-items:center;justify-content:center;border:1px solid rgba(247,244,236,.2);border-radius:4px;background:rgba(46,93,58,.28);color:var(--ivory);font-size:14px;font-weight:700;cursor:pointer;position:relative}
+  .seat:hover{background:rgba(218,167,90,.3);border-color:var(--gold)}
+  .seat.taken{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.09);color:rgba(247,244,236,.28);cursor:not-allowed}
+  .seat.chosen{background:var(--gold);border-color:var(--gold);color:var(--deep);transform:scale(1.06)}
+  .seat.mine{background:var(--forest);border-color:var(--gold);color:var(--gold-light)}
+  .seat i{position:absolute;top:1px;right:3px;font-size:8px;color:var(--gold);font-style:normal;letter-spacing:.5px}
+  .legendrow{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:.78rem;color:var(--ivory-dim);margin-top:10px}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px;border:1px solid rgba(247,244,236,.2)}
+  .sw.open{background:rgba(46,93,58,.5)} .sw.taken{background:rgba(255,255,255,.08)} .sw.chosen{background:var(--gold)} .sw.pwd{background:rgba(46,93,58,.5);border-color:var(--gold)}
+  .radio small.seats{display:block;font-size:.78rem;color:var(--ivory-dim);font-weight:400}
+  .radio.full{opacity:.5}
+  .radio.full small.seats{color:#FF8A8A}
   .radio:has(input:checked){border-color:var(--gold);background:rgba(30,64,40,.65)}
 
   .bank{display:none;margin-top:12px;padding:14px;border-radius:10px;background:rgba(0,0,0,.3);border:1px dashed rgba(218,167,90,.5);font-size:.92rem;text-align:center}
@@ -545,16 +549,58 @@
     <p class="tag">He came home from war.<br>She waited. <em>She always waits.</em><br><span class="oneline">Watch it with the Madams — laugh, scream, and swoon at the same time.</span></p>
 
     <div class="facts">
-      <div class="fact"><b>October 2026</b><span>Exact date to follow</span></div>
-      <div class="fact"><b>Metro Manila</b><span>Cinema to be announced</span></div>
+      <div class="fact"><b id="factDate">October 2026</b><span>Director's Club, The Podium</span></div>
+      <div class="fact"><b>8:00 PM · 8:30 PM</b><span>two screenings · limited seats</span></div>
       <div class="fact"><b>₱650</b><span>per person</span></div>
     </div>
 
     <div class="note">
-      This is a <strong>pre-registration</strong>, open for all. Your payment reserves your slot; the cinema, exact date, and seat assignments will be announced later. Group registration is available. If you've already registered, your slot is safe. <strong>Pee Mak is rated R-13</strong>: everyone you register, including companions, must be 13 or older. IDs will be checked on screening day.
+      Registration is <strong>open to all</strong>. Choose your screening time below — seats are limited and the form closes by itself when both cinemas are full. Your payment reserves your slot; seat numbers will be announced later. Group registration is available. If you've already registered, your slot is safe. <strong>Pee Mak is rated R-13</strong>: everyone you register, including companions, must be 13 or older. IDs will be checked on screening day.
     </div>
   </div>
 
+
+  <section id="holdSection" style="display:none">
+    <h2>Choosing screening times</h2>
+    <p class="sub" id="holdMsg">Registered Madams are choosing their screening time first. New registrations reopen soon — watch the group.</p>
+    <p>Already registered? <a href="?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time here →</a></p>
+  </section>
+
+  <section id="closedSection" style="display:none">
+    <h2>Fully booked</h2>
+    <p class="sub">Both screenings are full. Thank you, Madams. Watch the group for any released seats or a third screening.</p>
+  </section>
+
+  <section id="chooseSection" style="display:none">
+    <h2>Choose your screening time</h2>
+    <p class="sub">For Madams who already registered. Enter your registration number and the email you used.</p>
+    <div class="row2">
+      <div class="field"><label for="cRef">Registration number</label><input type="text" id="cRef" placeholder="PMK-0001"></div>
+      <div class="field"><label for="cEmail">Email</label><input type="email" id="cEmail" placeholder="the one on your reservation email"></div>
+    </div>
+    <button type="button" class="btn" id="cLookup">Find my registration</button>
+    <div class="msg" id="cMsg"></div>
+    <div id="cResult" style="display:none;margin-top:18px">
+      <div class="hint" style="margin-bottom:8px">This registration covers:</div>
+      <div id="cPeople" class="bank show" style="text-align:left;margin-top:0"></div>
+      <div class="field" style="margin-top:16px">
+        <label>Pick a screening <span class="req">*</span></label>
+        <div class="radios" id="cSlots"></div>
+        <div class="hint">Groups sit together, so the whole group needs seats in the same cinema.</div>
+      </div>
+      <button type="button" class="btn" id="cSave">Save my screening time</button>
+    </div>
+    <div id="cSeatStep" style="display:none;margin-top:18px">
+      <h2 style="font-size:1.25rem">Now pick your seat<span id="cSeatPlural"></span></h2>
+      <p class="sub" id="cSeatHint">Tap one seat for each person on your registration. Chosen seats are final, so pick carefully.</p>
+      <div class="screen-bar">SCREEN</div><div class="curve"></div>
+      <div class="map" id="cMap"></div>
+      <div class="legendrow"><span><i class="sw open"></i> open</span><span><i class="sw taken"></i> taken</span><span><i class="sw chosen"></i> yours</span><span><i class="sw pwd"></i> PWD seats</span></div>
+      <div class="hint" id="cSeatCount" style="margin-top:8px"></div>
+      <button type="button" class="btn" id="cSeatSave" disabled>Lock in my seats</button>
+    </div>
+    <div id="cDone" style="display:none;margin-top:18px" class="bank show"><b>Done — see you at the Podium.</b><br><span id="cDoneText"></span><br><span class="hint">We've emailed this to you. Bring the email and a valid ID on the day.</span></div>
+  </section>
 
   <section id="formSection">
     <h2>Pre-register</h2>
@@ -606,6 +652,15 @@
         </div>
       </div>
 
+      <div class="field" id="screeningField">
+        <label>Which screening? <span class="req">*</span></label>
+        <div class="radios" id="slots">
+          <label class="radio"><input type="radio" name="screening" value="DC3" required> <span>8:00 PM · Director's Club 3 <small class="seats" data-k="DC3"></small></span></label>
+          <label class="radio"><input type="radio" name="screening" value="DC2"> <span>8:30 PM · Director's Club 2 <small class="seats" data-k="DC2"></small></span></label>
+        </div>
+        <div class="hint">Both at the Director's Club, The Podium. Groups sit together — pick a screening with enough seats for everyone you're registering.</div>
+      </div>
+
       <div class="vault">
         <div class="vault-head">
           <span class="vault-icon" aria-hidden="true">👑</span>
@@ -614,30 +669,9 @@
             <p>Add a little something to the Madams' Vault. Totally optional — Pee Nang won't come looking for you if you don't. Probably.</p>
           </div>
         </div>
-        <div class="tiers">
-          <div class="tiers-kicker">The Madams' Vault Tiers</div>
-          <div class="tiers-period" id="tiersPeriod"></div>
-          <div class="ladder">
-            <div class="tier"><b>Jade</b><i>₱1,000</i></div>
-            <div class="tier"><b>Emerald</b><i>₱2,500</i></div>
-            <div class="tier t-gold"><b>Gold</b><i>₱5,000</i></div>
-            <div class="tier t-crown"><b>Crown</b><i>₱7,000+</i></div>
-          </div>
-          <div class="tiers-fine">Verified donations within a period add up — this one included. Reach a tier and hold it for the rest of the period, with perks announced monthly. Only the donation counts, not the ticket.</div>
-        </div>
         <label for="donation">Madams' Vault Donation (optional)</label>
         <input type="number" id="donation" name="donation" min="0" step="10" placeholder="0">
         <div class="hint">Any amount in multiples of ₱10. Goes to the community fund for gifts and future events.</div>
-        <div class="field" id="wallField">
-          <label for="wall">Show me on the Vault donor wall?</label>
-          <select id="wall" name="wall">
-            <option value="">Select</option>
-            <option value="Yes, with IG handle">Yes — with my IG handle</option>
-            <option value="Yes, initials only">Yes — initials only</option>
-            <option value="Anonymous">No — keep me anonymous</option>
-          </select>
-          <div class="same-note">Your donation is tracked under the email and Instagram handle above — use the same ones you use on the Vault page so it adds up toward your tier.</div>
-        </div>
       </div>
 
       <div class="field">
@@ -765,6 +799,86 @@
   function scheduleReach(){ setTimeout(reach, 12000 + Math.random()*18000); } // every 12–30 s
   setTimeout(reach, 2500);                                                  // first one 2.5 s after load
 
+  // ---------- live seats, hold switch, choose mode ----------
+  const isChoose = /[?&]choose/.test(location.search);
+  let SEATS = null;
+  async function loadStatus(){
+    if(SCRIPT_URL.startsWith('PASTE_')) return;
+    try{
+      const r = await fetch(SCRIPT_URL); SEATS = await r.json();
+      if(SEATS.date && !/__/.test(SEATS.date)) document.getElementById('factDate').textContent = SEATS.date;
+      document.querySelectorAll('.seats').forEach(el => { const k = el.dataset.k, s = SEATS.screenings[k]; if(!s) return; el.textContent = s.status === 'full' ? 'Fully booked' : s.status === 'few' ? 'Few seats left' : ''; const lab = el.closest('.radio'); lab.classList.toggle('full', s.status === 'full'); lab.querySelector('input').disabled = s.status === 'full'; });
+      if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; return; }
+      if(SEATS.soldOut){ document.getElementById('formSection').style.display = 'none'; document.getElementById('closedSection').style.display = 'block'; }
+      else if(SEATS.hold){ document.getElementById('formSection').style.display = 'none'; document.getElementById('holdSection').style.display = 'block'; document.getElementById('holdMsg').textContent = SEATS.holdMessage || document.getElementById('holdMsg').textContent; }
+    }catch(e){ /* leave the form usable; the script re-checks capacity on submit */ if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; } }
+  }
+  loadStatus(); setInterval(loadStatus, 60000);
+
+  // choose-your-time mode
+  const cMsg = document.getElementById('cMsg');
+  function cShow(t, kind){ cMsg.className = 'msg ' + (kind || 'err'); cMsg.textContent = t; }
+  let cData = null;
+  document.getElementById('cLookup').addEventListener('click', async () => {
+    const ref = document.getElementById('cRef').value.trim(), email = document.getElementById('cEmail').value.trim();
+    if(!ref || !email) return cShow('Please enter both your registration number and email.');
+    cMsg.className = 'msg'; const b = document.getElementById('cLookup'); b.disabled = true; b.textContent = 'Looking…';
+    try{
+      const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify({ action:'lookup', ref, email }) }); const out = await r.json();
+      if(!out.ok) throw new Error(out.message || out.error);
+      cData = out;
+      document.getElementById('cPeople').innerHTML = out.people.map(p => '<b>' + p.ref + '</b> &nbsp; ' + p.name).join('<br>');
+      const slots = document.getElementById('cSlots'); slots.innerHTML = '';
+      for(const k of Object.keys(out.screenings)){ const S = out.screenings[k]; const enough = S.fits;
+        slots.insertAdjacentHTML('beforeend', '<label class="radio ' + (enough ? '' : 'full') + '"><input type="radio" name="cscr" value="' + k + '" ' + (out.current === k ? 'checked' : '') + (enough ? '' : ' disabled') + '> <span>' + S.time + ' · Director\'s Club ' + S.room.replace('DC','') + ' <small class="seats">' + (S.status === 'full' ? 'Fully booked' : S.status === 'few' ? 'Few seats left' : (enough ? '' : 'Not enough room for your group')) + (out.current === k ? (S.status === 'open' ? '' : ' · ') + 'your current choice' : '') + '</small></span></label>'); }
+      document.getElementById('cDone').style.display = 'none'; document.getElementById('cSeatStep').style.display = 'none';
+      if(out.seats && out.seats.length === out.people.length){ document.getElementById('cResult').style.display = 'none'; showDone(out.current, out.people); }
+      else if(out.current){ document.getElementById('cResult').style.display = 'block'; cShow('You chose ' + out.screenings[out.current].time + ' but haven\'t picked seats yet — keep the time and pick seats below, or change it.', 'info'); seatStep(out.current, out.taken, out.plan); }
+      else { document.getElementById('cResult').style.display = 'block'; }
+    }catch(err){ cShow(err.message || 'Something went wrong. Please try again.'); }
+    b.disabled = false; b.textContent = 'Find my registration';
+  });
+  document.getElementById('cSave').addEventListener('click', async () => {
+    const pick = document.querySelector('input[name=cscr]:checked'); if(!pick) return cShow('Please pick a screening.');
+    const b = document.getElementById('cSave'); b.disabled = true; b.textContent = 'Saving…';
+    try{
+      const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify({ action:'choose', ref: document.getElementById('cRef').value.trim(), email: document.getElementById('cEmail').value.trim(), screening: pick.value }) }); const out = await r.json();
+      if(!out.ok) throw new Error(out.message || out.error);
+      cData.current = out.screening; cMsg.className = 'msg';
+      seatStep(out.screening, out.taken, out.plan); window.scrollTo({ top: document.getElementById('cSeatStep').offsetTop - 80, behavior:'smooth' });
+    }catch(err){ cShow(err.message || 'Something went wrong. Please try again.'); }
+    b.disabled = false; b.textContent = 'Save my screening time';
+  });
+
+  // seat picking
+  let picks = [], planT = null, planP = null;
+  function seatStep(scr, taken, plan){ picks = []; planT = taken || []; planP = plan; const n = cData.people.length; document.getElementById('cSeatPlural').textContent = n > 1 ? 's' : ''; document.getElementById('cSeatHint').textContent = n > 1 ? 'Tap ' + n + ' seats — one for each person on your registration. Chosen seats are final, so pick carefully.' : 'Tap a seat. Your choice is final, so pick carefully.'; document.getElementById('cSeatStep').style.display = 'block'; drawMap(); }
+  function drawMap(){
+    const map = document.getElementById('cMap'); map.innerHTML = ''; const n = cData.people.length;
+    planP.rows.forEach(letter => { const row = document.createElement('div'); row.className = 'srow';
+      for(let b = 0; b < 4; b++){ const block = document.createElement('div'); block.className = 'sblock';
+        planP.nums.slice(b*2, b*2+2).forEach(num => { const name = letter + num, el = document.createElement('div'); el.className = 'seat'; el.textContent = name;
+          if(planP.pwd.includes(name)) el.insertAdjacentHTML('beforeend', '<i>PWD</i>');
+          if(planT.includes(name)) el.classList.add('taken'); else el.addEventListener('click', () => { if(picks.includes(name)) picks = picks.filter(x => x !== name); else if(picks.length < n) picks.push(name); else { picks.shift(); picks.push(name); } drawMap(); });
+          if(picks.includes(name)) el.classList.add('chosen'); block.appendChild(el); });
+        row.appendChild(block); }
+      map.appendChild(row); });
+    document.getElementById('cSeatCount').textContent = picks.length ? 'Chosen: ' + picks.join(', ') + (picks.length < n ? ' — ' + (n - picks.length) + ' more to pick' : '') : '';
+    document.getElementById('cSeatSave').disabled = picks.length !== n;
+  }
+  document.getElementById('cSeatSave').addEventListener('click', async () => {
+    const b = document.getElementById('cSeatSave'); b.disabled = true; b.textContent = 'Locking in…';
+    try{
+      const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify({ action:'seats', ref: document.getElementById('cRef').value.trim(), email: document.getElementById('cEmail').value.trim(), seats: picks }) }); const out = await r.json();
+      if(!out.ok){ if(out.taken){ planT = out.taken; picks = []; drawMap(); } throw new Error(out.message || out.error); }
+      document.getElementById('cResult').style.display = 'none'; document.getElementById('cSeatStep').style.display = 'none'; showDone(out.screening, out.people); cMsg.className = 'msg';
+    }catch(err){ cShow(err.message || 'Something went wrong. Please try again.'); }
+    b.disabled = false; b.textContent = 'Lock in my seats';
+  });
+  function showDone(scr, people){ const S = cData.screenings[scr]; document.getElementById('cDone').style.display = 'block';
+    document.getElementById('cDoneText').innerHTML = (people.length > 1 ? 'Your group of ' + people.length + ' is' : 'You\'re') + ' booked for the <b>' + S.time + '</b> screening at Director\'s Club ' + S.room.replace('DC','') + '.<br>' + people.map(p => '<b>' + p.ref + '</b> ' + p.name + (p.seat ? ' · Seat <b>' + p.seat + '</b>' : '')).join('<br>');
+    window.scrollTo({ top: document.getElementById('cDone').offsetTop - 80, behavior:'smooth' }); }
+
   const form = document.getElementById('regForm');
   const msg = document.getElementById('msg');
   const btn = document.getElementById('submitBtn');
@@ -813,21 +927,6 @@
   }
   donation.addEventListener('input', updateTotal);
 
-  // ---- Vault Tiers: works out the current period from today's date (no manual edits per quarter) ----
-  function vaultPeriodLabel(d){
-    d = d || new Date();
-    var start = new Date(2026, 8, 15);                       // Sept 15, 2026 — Batch 1 begins
-    if (d < start) return 'Batch 1 · BER Months · starts Sept 15, 2026';
-    if (d.getFullYear() === 2026) return 'Batch 1 · BER Months · Sept 15 – Dec 31, 2026';
-    var q = Math.floor(d.getMonth() / 3), y = d.getFullYear();
-    var batch = (y - 2027) * 4 + q + 2;                      // Q1 2027 = Batch 2, Q2 2027 = Batch 3, ...
-    var ranges = ['Jan 1 – Mar 31', 'Apr 1 – Jun 30', 'Jul 1 – Sep 30', 'Oct 1 – Dec 31'];
-    return 'Batch ' + batch + ' · Q' + (q + 1) + ' ' + y + ' · ' + ranges[q] + ', ' + y;
-  }
-  document.getElementById('tiersPeriod').textContent = vaultPeriodLabel();
-  const wallField = document.getElementById('wallField');
-  donation.addEventListener('input', () => { wallField.style.display = (Number(donation.value)||0) > 0 ? 'block' : 'none'; });
-
   // file name + preview
   proof.addEventListener('change', () => {
     const f = proof.files[0];
@@ -850,9 +949,9 @@
     if(data.email2 && !/^\S+@\S+\.\S+$/.test(data.email2)) return showError('The backup email doesn\'t look right. Please check it.');
     const comps = companions();
     for(const c of comps){ if(!c.name) return showError('Please give a full name for every companion, or remove the empty row.'); }
+    if(!data.screening) return showError('Please choose which screening you\'re joining.');
     if(!data.method) return showError('Please choose how you paid.');
     if(d < 0 || d !== (Number(data.donation)||0)) return showError('Vault donations must be in multiples of ₱10.');
-    if(d > 0 && !data.wall) return showError('Please tell us whether to show you on the Vault donor wall.');
     const f = proof.files[0];
     if(!f) return showError('Please upload your payment screenshot.');
     if(f.size > 5*1024*1024) return showError('Your file is over 5 MB. Please upload a smaller screenshot.');
@@ -865,15 +964,17 @@
     const fileBase64 = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(f); });
 
     const payload = {
-      name:data.name.trim(), member:data.member, email:data.email.trim(), email2:(data.email2||'').trim(), mobile:data.mobile.trim(), ig:data.ig.trim(), xhandle:(data.xhandle||'').trim(),
+      name:data.name.trim(), member:data.member, screening:data.screening, email:data.email.trim(), email2:(data.email2||'').trim(), mobile:data.mobile.trim(), ig:data.ig.trim(), xhandle:(data.xhandle||'').trim(),
       companions:comps, people:1+comps.length,
-      method:data.method, price:PRICE, donation:d, wall:(d > 0 ? data.wall : ''), total:PRICE*(1+comps.length)+d, notes:(data.notes||'').trim(),
+      method:data.method, price:PRICE, donation:d, total:PRICE*(1+comps.length)+d, notes:(data.notes||'').trim(),
       fileName:f.name, fileType:f.type, fileBase64
     };
 
     try{
       const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(payload) });
       const out = await r.json();
+      if(!out.ok && out.error === 'full'){ btn.disabled=false; btn.textContent='Secure my slot'; loadStatus(); return showError(out.message + ' Please pick the other screening, or message the admins.', 'info'); }
+      if(!out.ok && out.error === 'hold'){ btn.disabled=false; btn.textContent='Secure my slot'; loadStatus(); return showError(out.message, 'info'); }
       if(!out.ok && out.error === 'duplicate'){
         btn.disabled=false; btn.textContent='Secure my slot';
         const whose = out.who ? out.who + '\'s ' : 'your ';
@@ -881,6 +982,7 @@
       }
       if(!out.ok) throw new Error(out.error || 'Unknown error');
       document.getElementById('refNo').textContent = out.ref;
+      const chosen = document.querySelector('input[name=screening]:checked'); if(chosen){ const lbl = chosen.parentNode.querySelector('span').childNodes[0].textContent.trim(); document.getElementById('refList').insertAdjacentHTML('afterend', '<div style="margin-top:10px;color:var(--gold-light)">Screening: ' + lbl + '</div>'); }
       if(out.refs && out.refs.length > 1){
         document.getElementById('refLabel').textContent = 'Your registration numbers';
         document.getElementById('refNo').textContent = out.refs[0].ref + ' – ' + out.refs[out.refs.length-1].ref;

@@ -563,7 +563,7 @@
   <section id="holdSection">
     <h2>Choosing screening times</h2>
     <p class="sub" id="holdMsg">Registered Madams are choosing their screening time first. New registrations reopen soon — watch the group.</p>
-    <p>Already registered? <a href="?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time here →</a></p>
+    <p>Already registered? <a href="https://madamsofwilbea.github.io/peemak-screening/?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time here →</a></p>
   </section>
 
   <section id="closedSection" style="display:none">
@@ -602,7 +602,7 @@
   </section>
 
   <section id="alreadySection" style="padding:16px 20px;display:none">
-    <p style="margin:0"><b>Already registered?</b> <a href="?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time &amp; seats here →</a></p>
+    <p style="margin:0"><b>Already registered?</b> <a href="https://madamsofwilbea.github.io/peemak-screening/?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time &amp; seats here →</a></p>
   </section>
 
   <section id="formSection" style="display:none">
@@ -664,6 +664,15 @@
         <div class="hint">Both at the Director's Club, The Podium. Groups sit together — pick a screening with enough seats for everyone you're registering.</div>
       </div>
 
+      <div class="field" id="fSeatField" style="display:none">
+        <label>Pick your seat<span id="fSeatPlural"></span> <span class="req">*</span></label>
+        <div class="hint" id="fSeatHint" style="margin:0 0 8px">Tap one seat per person. Grey seats are taken.</div>
+        <div class="screen-bar">SCREEN</div><div class="curve"></div>
+        <div class="map" id="fMap"></div>
+        <div class="legendrow"><span><i class="sw open"></i> open</span><span><i class="sw taken"></i> taken</span><span><i class="sw chosen"></i> yours</span><span><i class="sw pwd"></i> PWD seats</span></div>
+        <div class="hint" id="fSeatCount" style="margin-top:8px"></div>
+      </div>
+
       <div class="vault">
         <div class="vault-head">
           <span class="vault-icon" aria-hidden="true">👑</span>
@@ -721,7 +730,7 @@
       </div>
 
       <label class="check"><input type="checkbox" id="age" required> I confirm that I and everyone I'm registering are 13 or older, and I understand IDs will be checked on screening day.</label>
-      <label class="check"><input type="checkbox" id="terms" required> I understand my slot is reserved now and confirmed once my payment is verified, and that the cinema and exact date will be announced later. Payments are non-refundable unless the screening is cancelled.</label>
+      <label class="check"><input type="checkbox" id="terms" required> I understand my slot and seats are reserved now and confirmed once my payment is verified, and that seats are released if payment isn't verified within 48 hours. Payments are non-refundable unless the screening is cancelled.</label>
 
       <button type="submit" class="btn" id="submitBtn">Secure my slot</button>
       <div class="msg" id="msg"></div>
@@ -812,6 +821,7 @@
       const r = await fetch(SCRIPT_URL); SEATS = await r.json();
       if(SEATS.date && !/__/.test(SEATS.date)) document.getElementById('factDate').textContent = SEATS.date;
       document.querySelectorAll('.seats').forEach(el => { const k = el.dataset.k, s = SEATS.screenings[k]; if(!s) return; el.textContent = s.status === 'full' ? 'Fully booked' : s.status === 'few' ? 'Few seats left' : ''; const lab = el.closest('.radio'); lab.classList.toggle('full', s.status === 'full'); lab.querySelector('input').disabled = s.status === 'full'; });
+      if(fScr) fDrawMap();
       if(isChoose) return;
       const show = (id, on) => document.getElementById(id).style.display = on ? '' : 'none';
       if(SEATS.soldOut){ show('formSection', false); show('alreadySection', false); show('holdSection', false); show('closedSection', true); document.getElementById('noteOpen').style.display = 'none'; document.getElementById('noteHold').style.display = 'none'; }
@@ -875,6 +885,28 @@
   function showDone(scr, people){ const S = cData.screenings[scr]; document.getElementById('cDone').style.display = 'block';
     document.getElementById('cDoneText').innerHTML = (people.length > 1 ? 'Your group of ' + people.length + ' is' : 'You\'re') + ' booked for the <b>' + S.time + '</b> screening at Director\'s Club ' + S.room.replace('DC','') + '.<br>' + people.map(p => '<b>' + p.ref + '</b> ' + p.name + (p.seat ? ' · Seat <b>' + p.seat + '</b>' : '')).join('<br>');
     window.scrollTo({ top: document.getElementById('cDone').offsetTop - 80, behavior:'smooth' }); }
+
+  // ---- seat map on the registration form ----
+  let fPicks = [], fScr = null;
+  const fPlanDefault = { rows:['A','B','C','D','E','F'], nums:[8,7,6,5,4,3,2,1], pwd:['A1','A2'] };
+  function fPeople(){ return 1 + companionCount(); }
+  function fDrawMap(){
+    const plan = (SEATS && SEATS.plan) || fPlanDefault, taken = (SEATS && SEATS.takenBy && SEATS.takenBy[fScr]) || [], n = fPeople();
+    const map = document.getElementById('fMap'); map.innerHTML = '';
+    plan.rows.forEach(letter => { const row = document.createElement('div'); row.className = 'srow';
+      for(let b = 0; b < 4; b++){ const block = document.createElement('div'); block.className = 'sblock';
+        plan.nums.slice(b*2, b*2+2).forEach(num => { const name = letter + num, el = document.createElement('div'); el.className = 'seat'; el.textContent = name;
+          if(plan.pwd.includes(name)) el.insertAdjacentHTML('beforeend', '<i>PWD</i>');
+          if(taken.includes(name)) el.classList.add('taken'); else el.addEventListener('click', () => { if(fPicks.includes(name)) fPicks = fPicks.filter(x => x !== name); else if(fPicks.length < n) fPicks.push(name); else { fPicks.shift(); fPicks.push(name); } fDrawMap(); });
+          if(fPicks.includes(name)) el.classList.add('chosen'); block.appendChild(el); });
+        row.appendChild(block); }
+      map.appendChild(row); });
+    document.getElementById('fSeatPlural').textContent = n > 1 ? 's' : '';
+    document.getElementById('fSeatHint').textContent = n > 1 ? 'Tap ' + n + ' seats — one for each person you\'re registering. Grey seats are taken.' : 'Tap a seat. Grey seats are taken.';
+    document.getElementById('fSeatCount').textContent = fPicks.length ? 'Chosen: ' + fPicks.join(', ') + (fPicks.length < n ? ' — ' + (n - fPicks.length) + ' more to pick' : '') : '';
+  }
+  document.querySelectorAll('input[name=screening]').forEach(r => r.addEventListener('change', () => { if(!r.checked) return; fScr = r.value; fPicks = []; document.getElementById('fSeatField').style.display = 'block'; fDrawMap(); }));
+  const _refreshGroup = refreshGroup; refreshGroup = function(){ _refreshGroup(); if(fScr){ fPicks = fPicks.slice(0, fPeople()); fDrawMap(); } };
 
   const form = document.getElementById('regForm');
   const msg = document.getElementById('msg');
@@ -947,6 +979,7 @@
     const comps = companions();
     for(const c of comps){ if(!c.name) return showError('Please give a full name for every companion, or remove the empty row.'); }
     if(!data.screening) return showError('Please choose which screening you\'re joining.');
+    if(fPicks.length !== fPeople()) return showError('Please pick ' + (fPeople() > 1 ? fPeople() + ' seats — one for each person.' : 'your seat on the seat map.'));
     if(!data.method) return showError('Please choose how you paid.');
     if(d < 0 || d !== (Number(data.donation)||0)) return showError('Vault donations must be in multiples of ₱10.');
     const f = proof.files[0];
@@ -961,7 +994,7 @@
     const fileBase64 = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(f); });
 
     const payload = {
-      name:data.name.trim(), member:data.member, screening:data.screening, email:data.email.trim(), email2:(data.email2||'').trim(), mobile:data.mobile.trim(), ig:data.ig.trim(), xhandle:(data.xhandle||'').trim(),
+      name:data.name.trim(), member:data.member, screening:data.screening, seats:fPicks, email:data.email.trim(), email2:(data.email2||'').trim(), mobile:data.mobile.trim(), ig:data.ig.trim(), xhandle:(data.xhandle||'').trim(),
       companions:comps, people:1+comps.length,
       method:data.method, price:PRICE, donation:d, total:PRICE*(1+comps.length)+d, notes:(data.notes||'').trim(),
       fileName:f.name, fileType:f.type, fileBase64
@@ -970,6 +1003,7 @@
     try{
       const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(payload) });
       const out = await r.json();
+      if(!out.ok && out.error === 'taken'){ btn.disabled=false; btn.textContent='Secure my slot'; if(out.takenBy && SEATS){ SEATS.takenBy = out.takenBy; } fPicks = []; fDrawMap(); return showError(out.message, 'info'); }
       if(!out.ok && out.error === 'full'){ btn.disabled=false; btn.textContent='Secure my slot'; loadStatus(); return showError(out.message + ' Please pick the other screening, or message the admins.', 'info'); }
       if(!out.ok && out.error === 'hold'){ btn.disabled=false; btn.textContent='Secure my slot'; loadStatus(); return showError(out.message, 'info'); }
       if(!out.ok && out.error === 'duplicate'){
@@ -979,7 +1013,7 @@
       }
       if(!out.ok) throw new Error(out.error || 'Unknown error');
       document.getElementById('refNo').textContent = out.ref;
-      const chosen = document.querySelector('input[name=screening]:checked'); if(chosen){ const lbl = chosen.parentNode.querySelector('span').childNodes[0].textContent.trim(); document.getElementById('refList').insertAdjacentHTML('afterend', '<div style="margin-top:10px;color:var(--gold-light)">Screening: ' + lbl + '</div>'); }
+      const chosen = document.querySelector('input[name=screening]:checked'); if(chosen){ const lbl = chosen.parentNode.querySelector('span').childNodes[0].textContent.trim(); document.getElementById('refList').insertAdjacentHTML('afterend', '<div style="margin-top:10px;color:var(--gold-light)">Screening: ' + lbl + '<br>Seat' + (fPicks.length > 1 ? 's' : '') + ': ' + fPicks.join(', ') + '</div>'); }
       if(out.refs && out.refs.length > 1){
         document.getElementById('refLabel').textContent = 'Your registration numbers';
         document.getElementById('refNo').textContent = out.refs[0].ref + ' – ' + out.refs[out.refs.length-1].ref;

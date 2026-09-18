@@ -550,12 +550,12 @@
 
     <div class="facts">
       <div class="fact"><b id="factDate">October 14, 2026</b><span>Director's Club, The Podium</span></div>
-      <div class="fact"><b>8:00 PM · 8:30 PM</b><span>two screenings · limited seats</span></div>
+      <div class="fact"><b>8:00 &amp; 8:30 PM</b><span>two screenings · limited seats</span></div>
       <div class="fact"><b>₱650</b><span>per person</span></div>
     </div>
 
     <div class="note">
-      Registration is <strong>open to all</strong>. Choose your screening time below — seats are limited and the form closes by itself when both cinemas are full. Your payment reserves your slot; seat numbers will be announced later. Group registration is available. If you've already registered, your slot is safe. <strong>Pee Mak is rated R-13</strong>: everyone you register, including companions, must be 13 or older. IDs will be checked on screening day.
+      <span id="noteOpen">Registration is <strong>open to all</strong>. Choose your screening time below — seats are limited and the form closes by itself when both cinemas are full. Your payment reserves your slot. Group registration is available. If you've already registered, your slot is safe.</span><span id="noteHold" style="display:none"><strong>New registrations are on hold</strong> while registered Madams choose their screening time and seats. Public registration reopens soon — watch the group.</span> <strong>Pee Mak is rated R-13</strong>: everyone attending, including companions, must be 13 or older. IDs will be checked on screening day.
     </div>
   </div>
 
@@ -804,6 +804,7 @@
 
   // ---------- live seats, hold switch, choose mode ----------
   const isChoose = /[?&]choose/.test(location.search);
+  if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; }
   let SEATS = null;
   async function loadStatus(){
     if(SCRIPT_URL.startsWith('PASTE_')) return;
@@ -813,7 +814,7 @@
       document.querySelectorAll('.seats').forEach(el => { const k = el.dataset.k, s = SEATS.screenings[k]; if(!s) return; el.textContent = s.status === 'full' ? 'Fully booked' : s.status === 'few' ? 'Few seats left' : ''; const lab = el.closest('.radio'); lab.classList.toggle('full', s.status === 'full'); lab.querySelector('input').disabled = s.status === 'full'; });
       if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; return; }
       if(SEATS.soldOut){ document.getElementById('formSection').style.display = 'none'; document.getElementById('closedSection').style.display = 'block'; }
-      else if(SEATS.hold){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('holdSection').style.display = 'block'; document.getElementById('holdMsg').textContent = SEATS.holdMessage || document.getElementById('holdMsg').textContent; }
+      else if(SEATS.hold){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('holdSection').style.display = 'block'; document.getElementById('noteOpen').style.display = 'none'; document.getElementById('noteHold').style.display = 'inline'; document.getElementById('holdMsg').textContent = SEATS.holdMessage || document.getElementById('holdMsg').textContent; }
     }catch(e){ /* leave the form usable; the script re-checks capacity on submit */ if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; } }
   }
   loadStatus(); setInterval(loadStatus, 60000);

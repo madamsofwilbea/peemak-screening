@@ -549,7 +549,7 @@
     <p class="tag">He came home from war.<br>She waited. <em>She always waits.</em><br><span class="oneline">Watch it with the Madams — laugh, scream, and swoon at the same time.</span></p>
 
     <div class="facts">
-      <div class="fact"><b id="factDate">October 2026</b><span>Director's Club, The Podium</span></div>
+      <div class="fact"><b id="factDate">October 14, 2026</b><span>Director's Club, The Podium</span></div>
       <div class="fact"><b>8:00 PM · 8:30 PM</b><span>two screenings · limited seats</span></div>
       <div class="fact"><b>₱650</b><span>per person</span></div>
     </div>
@@ -588,18 +588,21 @@
         <div class="radios" id="cSlots"></div>
         <div class="hint">Groups sit together, so the whole group needs seats in the same cinema.</div>
       </div>
-      <button type="button" class="btn" id="cSave">Save my screening time</button>
     </div>
     <div id="cSeatStep" style="display:none;margin-top:18px">
-      <h2 style="font-size:1.25rem">Now pick your seat<span id="cSeatPlural"></span></h2>
+      <h2 style="font-size:1.25rem">Pick your seat<span id="cSeatPlural"></span></h2>
       <p class="sub" id="cSeatHint">Tap one seat for each person on your registration. Chosen seats are final, so pick carefully.</p>
       <div class="screen-bar">SCREEN</div><div class="curve"></div>
       <div class="map" id="cMap"></div>
       <div class="legendrow"><span><i class="sw open"></i> open</span><span><i class="sw taken"></i> taken</span><span><i class="sw chosen"></i> yours</span><span><i class="sw pwd"></i> PWD seats</span></div>
       <div class="hint" id="cSeatCount" style="margin-top:8px"></div>
-      <button type="button" class="btn" id="cSeatSave" disabled>Lock in my seats</button>
+      <button type="button" class="btn" id="cSeatSave" disabled>Save my screening time & seats</button>
     </div>
     <div id="cDone" style="display:none;margin-top:18px" class="bank show"><b>Done — see you at the Podium.</b><br><span id="cDoneText"></span><br><span class="hint">We've emailed this to you. Bring the email and a valid ID on the day.</span></div>
+  </section>
+
+  <section id="alreadySection" style="padding:16px 20px">
+    <p style="margin:0"><b>Already registered?</b> <a href="?choose" style="color:var(--gold-light);font-weight:700">Choose your screening time &amp; seats here →</a></p>
   </section>
 
   <section id="formSection">
@@ -808,10 +811,10 @@
       const r = await fetch(SCRIPT_URL); SEATS = await r.json();
       if(SEATS.date && !/__/.test(SEATS.date)) document.getElementById('factDate').textContent = SEATS.date;
       document.querySelectorAll('.seats').forEach(el => { const k = el.dataset.k, s = SEATS.screenings[k]; if(!s) return; el.textContent = s.status === 'full' ? 'Fully booked' : s.status === 'few' ? 'Few seats left' : ''; const lab = el.closest('.radio'); lab.classList.toggle('full', s.status === 'full'); lab.querySelector('input').disabled = s.status === 'full'; });
-      if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; return; }
+      if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; return; }
       if(SEATS.soldOut){ document.getElementById('formSection').style.display = 'none'; document.getElementById('closedSection').style.display = 'block'; }
-      else if(SEATS.hold){ document.getElementById('formSection').style.display = 'none'; document.getElementById('holdSection').style.display = 'block'; document.getElementById('holdMsg').textContent = SEATS.holdMessage || document.getElementById('holdMsg').textContent; }
-    }catch(e){ /* leave the form usable; the script re-checks capacity on submit */ if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; } }
+      else if(SEATS.hold){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('holdSection').style.display = 'block'; document.getElementById('holdMsg').textContent = SEATS.holdMessage || document.getElementById('holdMsg').textContent; }
+    }catch(e){ /* leave the form usable; the script re-checks capacity on submit */ if(isChoose){ document.getElementById('formSection').style.display = 'none'; document.getElementById('alreadySection').style.display = 'none'; document.getElementById('chooseSection').style.display = 'block'; } }
   }
   loadStatus(); setInterval(loadStatus, 60000);
 
@@ -832,27 +835,18 @@
       for(const k of Object.keys(out.screenings)){ const S = out.screenings[k]; const enough = S.fits;
         slots.insertAdjacentHTML('beforeend', '<label class="radio ' + (enough ? '' : 'full') + '"><input type="radio" name="cscr" value="' + k + '" ' + (out.current === k ? 'checked' : '') + (enough ? '' : ' disabled') + '> <span>' + S.time + ' · Director\'s Club ' + S.room.replace('DC','') + ' <small class="seats">' + (S.status === 'full' ? 'Fully booked' : S.status === 'few' ? 'Few seats left' : (enough ? '' : 'Not enough room for your group')) + (out.current === k ? (S.status === 'open' ? '' : ' · ') + 'your current choice' : '') + '</small></span></label>'); }
       document.getElementById('cDone').style.display = 'none'; document.getElementById('cSeatStep').style.display = 'none';
+      cData.plan = out.plan || { rows:['A','B','C','D','E','F'], nums:[8,7,6,5,4,3,2,1], pwd:['A1','A2'] };
+      cData.takenBy = out.takenBy || { DC3: [], DC2: [] };
+      document.querySelectorAll('input[name=cscr]').forEach(r => r.addEventListener('change', () => { if(r.checked) seatStep(r.value); }));
       if(out.seats && out.seats.length === out.people.length){ document.getElementById('cResult').style.display = 'none'; showDone(out.current, out.people); }
-      else if(out.current){ document.getElementById('cResult').style.display = 'block'; cShow('You chose ' + out.screenings[out.current].time + ' but haven\'t picked seats yet — keep the time and pick seats below, or change it.', 'info'); seatStep(out.current, out.taken, out.plan); }
-      else { document.getElementById('cResult').style.display = 'block'; }
+      else { document.getElementById('cResult').style.display = 'block'; if(out.current){ cShow('You chose ' + out.screenings[out.current].time + ' — now pick your seats below, or change the time.', 'info'); seatStep(out.current); } else cShow('Pick a screening — the seat map for that cinema appears below.', 'info'); }
     }catch(err){ cShow(err.message || 'Something went wrong. Please try again.'); }
     b.disabled = false; b.textContent = 'Find my registration';
   });
-  document.getElementById('cSave').addEventListener('click', async () => {
-    const pick = document.querySelector('input[name=cscr]:checked'); if(!pick) return cShow('Please pick a screening.');
-    const b = document.getElementById('cSave'); b.disabled = true; b.textContent = 'Saving…';
-    try{
-      const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify({ action:'choose', ref: document.getElementById('cRef').value.trim(), email: document.getElementById('cEmail').value.trim(), screening: pick.value }) }); const out = await r.json();
-      if(!out.ok) throw new Error(out.message || out.error);
-      cData.current = out.screening; cMsg.className = 'msg';
-      seatStep(out.screening, out.taken, out.plan); window.scrollTo({ top: document.getElementById('cSeatStep').offsetTop - 80, behavior:'smooth' });
-    }catch(err){ cShow(err.message || 'Something went wrong. Please try again.'); }
-    b.disabled = false; b.textContent = 'Save my screening time';
-  });
-
   // seat picking
   let picks = [], planT = null, planP = null;
-  function seatStep(scr, taken, plan){ picks = []; planT = taken || []; planP = plan; const n = cData.people.length; document.getElementById('cSeatPlural').textContent = n > 1 ? 's' : ''; document.getElementById('cSeatHint').textContent = n > 1 ? 'Tap ' + n + ' seats — one for each person on your registration. Chosen seats are final, so pick carefully.' : 'Tap a seat. Your choice is final, so pick carefully.'; document.getElementById('cSeatStep').style.display = 'block'; drawMap(); }
+  let cScr = null;
+  function seatStep(scr){ cScr = scr; picks = []; planT = (cData.takenBy && cData.takenBy[scr]) || []; planP = cData.plan; const n = cData.people.length; document.getElementById('cSeatPlural').textContent = n > 1 ? 's' : ''; document.getElementById('cSeatHint').textContent = n > 1 ? 'Tap ' + n + ' seats — one for each person on your registration. Chosen seats are final, so pick carefully.' : 'Tap a seat. Your choice is final, so pick carefully.'; document.getElementById('cSeatStep').style.display = 'block'; document.getElementById('cSeatStep').querySelector('h2').textContent = 'Pick your seat' + (n > 1 ? 's' : '') + ' — ' + cData.screenings[scr].time + ', Director\'s Club ' + cData.screenings[scr].room.replace('DC',''); drawMap(); }
   function drawMap(){
     const map = document.getElementById('cMap'); map.innerHTML = ''; const n = cData.people.length;
     planP.rows.forEach(letter => { const row = document.createElement('div'); row.className = 'srow';
@@ -867,13 +861,13 @@
     document.getElementById('cSeatSave').disabled = picks.length !== n;
   }
   document.getElementById('cSeatSave').addEventListener('click', async () => {
-    const b = document.getElementById('cSeatSave'); b.disabled = true; b.textContent = 'Locking in…';
+    const b = document.getElementById('cSeatSave'); b.disabled = true; b.textContent = 'Saving…';
     try{
-      const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify({ action:'seats', ref: document.getElementById('cRef').value.trim(), email: document.getElementById('cEmail').value.trim(), seats: picks }) }); const out = await r.json();
-      if(!out.ok){ if(out.taken){ planT = out.taken; picks = []; drawMap(); } throw new Error(out.message || out.error); }
+      const r = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify({ action:'book', ref: document.getElementById('cRef').value.trim(), email: document.getElementById('cEmail').value.trim(), screening: cScr, seats: picks }) }); const out = await r.json();
+      if(!out.ok){ if(out.takenBy){ cData.takenBy = out.takenBy; planT = out.takenBy[cScr] || []; picks = []; drawMap(); } throw new Error(out.message || out.error); }
       document.getElementById('cResult').style.display = 'none'; document.getElementById('cSeatStep').style.display = 'none'; showDone(out.screening, out.people); cMsg.className = 'msg';
     }catch(err){ cShow(err.message || 'Something went wrong. Please try again.'); }
-    b.disabled = false; b.textContent = 'Lock in my seats';
+    b.disabled = picks.length !== (cData ? cData.people.length : 1); b.textContent = 'Save my screening time & seats';
   });
   function showDone(scr, people){ const S = cData.screenings[scr]; document.getElementById('cDone').style.display = 'block';
     document.getElementById('cDoneText').innerHTML = (people.length > 1 ? 'Your group of ' + people.length + ' is' : 'You\'re') + ' booked for the <b>' + S.time + '</b> screening at Director\'s Club ' + S.room.replace('DC','') + '.<br>' + people.map(p => '<b>' + p.ref + '</b> ' + p.name + (p.seat ? ' · Seat <b>' + p.seat + '</b>' : '')).join('<br>');

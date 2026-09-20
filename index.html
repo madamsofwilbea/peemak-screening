@@ -555,7 +555,7 @@
     </div>
 
     <div class="note">
-      <span id="noteOpen" style="display:none">Registration is <strong>open to all</strong>. Choose your screening time and seats below — seats are limited and the form closes by itself when both cinemas are full. Your payment secures your seat. Group registration is available. If you already registered during pre-registration, your slot is safe — use the link above to choose your time and seats.</span><span id="noteHold"><strong>Registration is on hold</strong> while registered Madams choose their screening time and seats. It reopens soon — watch the group.</span> <strong>Pee Mak is rated R-13</strong>: everyone attending, including companions, must be 13 or older. IDs will be checked on screening day.
+      <span id="noteOpen" style="display:none">Registration is <strong>open to all</strong>. Choose your screening time and seats below — seats are limited and the form closes by itself when both cinemas are full. Your payment secures your seat. Group registration is available. One registration per person per screening day — you're welcome to register for both October 14 and October 17. If you registered during pre-registration, your slot is safe — use the link above to choose your time and seats.</span><span id="noteHold"><strong>Registration is on hold</strong> while registered Madams choose their screening time and seats. It reopens soon — watch the group.</span> <strong>Pee Mak is rated R-13</strong>: everyone attending, including companions, must be 13 or older. IDs will be checked on screening day.
     </div>
   </div>
 
@@ -1018,7 +1018,7 @@
       if(!out.ok && out.error === 'duplicate'){
         btn.disabled=false; btn.textContent='Secure my seat';
         const whose = out.who ? out.who + '\'s ' : 'your ';
-        return showError('Your registration didn\'t go through because ' + whose + out.field + ' is already registered under ' + out.ref + '. Good news: that slot is already reserved, so nothing is lost — check the inbox for the reservation email. If that wasn\'t you, message the admins and we\'ll sort it out.', 'info');
+        return showError('Your registration didn\'t go through because ' + whose + out.field + ' is already registered for ' + (out.day || 'that day') + ' under ' + out.ref + '. That seat is safe, so nothing is lost. Registering for the other screening date with the same details is fine — just pick a screening on a different day. If that wasn\'t you, message the admins and we\'ll sort it out.', 'info');
       }
       if(!out.ok) throw new Error(out.error || 'Unknown error');
       document.getElementById('refNo').textContent = out.ref;

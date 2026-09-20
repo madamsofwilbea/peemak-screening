@@ -598,7 +598,7 @@
       <p class="sub" id="cSeatHint">Tap one seat for each person on your registration. Chosen seats are final, so pick carefully.</p>
       <div class="screen-bar">SCREEN</div><div class="curve"></div>
       <div class="map" id="cMap"></div>
-      <div class="legendrow"><span><i class="sw open"></i> open</span><span><i class="sw taken"></i> taken</span><span><i class="sw chosen"></i> yours</span><span><i class="sw pwd"></i> PWD seats</span></div>
+      <div class="legendrow"><span><i class="sw open"></i> open</span><span><i class="sw taken"></i> taken</span><span><i class="sw chosen"></i> yours</span></div>
       <div class="hint" id="cSeatCount" style="margin-top:8px"></div>
       <button type="button" class="btn" id="cSeatSave" disabled>Save my screening time & seats</button>
     </div>
@@ -674,7 +674,7 @@
         <div class="hint" id="fSeatHint" style="margin:0 0 8px">Tap one seat per person. Grey seats are taken.</div>
         <div class="screen-bar">SCREEN</div><div class="curve"></div>
         <div class="map" id="fMap"></div>
-        <div class="legendrow"><span><i class="sw open"></i> open</span><span><i class="sw taken"></i> taken</span><span><i class="sw chosen"></i> yours</span><span><i class="sw pwd"></i> PWD seats</span></div>
+        <div class="legendrow"><span><i class="sw open"></i> open</span><span><i class="sw taken"></i> taken</span><span><i class="sw chosen"></i> yours</span></div>
         <div class="hint" id="fSeatCount" style="margin-top:8px"></div>
       </div>
 
@@ -892,7 +892,7 @@
 
   // ---- seat map on the registration form ----
   let fPicks = [], fScr = null;
-  const fPlanDefault = { rows:['A','B','C','D','E','F'], blocks:[[8,7],[6,5],[4,3],[2,1]], pwd:['A1','A2'] };
+  const fPlanDefault = { rows:['A','B','C','D','E','F'], blocks:[[8,7],[6,5],[4,3],[2,1]], pwd:[] };
   function fPeople(){ return 1 + companionCount(); }
   // draws any seat plan: rows × blocks (a gap between blocks), tap to pick up to n seats
   function renderMap(mapEl, plan, taken, picks, n, onPick){
